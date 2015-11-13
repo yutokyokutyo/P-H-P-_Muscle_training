@@ -1,15 +1,15 @@
 <?php
 class OdekakeSpots
 {
-    public static function parseHtmlToArray() {
-        $html  = file_get_contents('http://www.walkerplus.com/top/tokyo.html');
+    const URL = 'http://www.walkerplus.com/top/tokyo.html';
+
+    public static function parseHtmlToArray(string $url) {
+        $html  = file_get_contents($url);
         $lines = explode("\n", $html);
         return $lines;
-        // ネットが死んでたり、hostサーバが落ちてたらテストが落ちてしまう懸念有り
     }
 
-    public static function getRanking() {
-        $lines = self::parseHtmlToArray();
+    public static function getRanking(array $lines) {
         $spots = [];
 
         foreach ($lines as $line) {
@@ -26,10 +26,9 @@ class OdekakeSpots
         return $spots;
     }
 
-    public static function printOdekakeSpots() {
-        $spots = self::getRanking();
+    public static function printOdekakeSpots($url = self::URL) {
+        $lines = OdekakeSpots::parseHtmlToArray($url);
+        $spots = self::getRanking($lines);
         return implode("\n", $spots);
     }
 }
-
-OdekakeSpots::getRanking();
